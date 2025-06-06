@@ -51,7 +51,21 @@ while True:
                 player_choice = "even"
 
         elif time_since_last_round >= round_interval:
-            frame, player_move = detect_hand_and_count_fingers(frame)
+
+            player_move = None
+            while player_move is None:
+                ret, frame = cap.read()
+                if not ret:
+                    break
+
+                draw_center_text(frame, "Please show a number between 1 and 5", -30, 0.9, (255, 255, 255))
+                frame, player_move = detect_hand_and_count_fingers(frame)
+
+                cv2.imshow("Odd-Even AI", frame)
+                if cv2.waitKey(1) & 0xFF == ord('q'):
+                    cap.release()
+                    cv2.destroyAllWindows()
+                    exit()
 
             if player_move is not None:
                 ai_move = random.randint(1, 5)
